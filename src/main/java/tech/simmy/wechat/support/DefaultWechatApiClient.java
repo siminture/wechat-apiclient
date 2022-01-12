@@ -61,9 +61,7 @@ public class DefaultWechatApiClient implements WechatApiClient {
             throw new IllegalStateException("GetAccessTokenResult is null");
         }
 
-        if (getAccessTokenResult.getErrorCode() != 0) {
-            throw new IllegalStateException(getAccessTokenResult.getErrorMessage());
-        }
+        getAccessTokenResult.assertIsSuccess();
 
         return new AccessToken(getAccessTokenResult.getAccessToken(), Instant.now().plusSeconds(getAccessTokenResult.getExpiresIn()));
     }
