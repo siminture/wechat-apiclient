@@ -9,6 +9,8 @@ import tech.simmy.wechat.util.JsonSerializer;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 public class DefaultWechatApiClient implements WechatApiClient {
@@ -18,7 +20,7 @@ public class DefaultWechatApiClient implements WechatApiClient {
     private static final String GET_PHONE_NUMBER = "https://api.weixin.qq.com/wxa/business/getuserphonenumber";
 
     private final OkHttpClient httpClient = new OkHttpClient();
-
+    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private final WechatApiClientProperties properties;
     private final JsonSerializer jsonSerializer;
     private final AccessTokenHolder accessTokenHolder;
@@ -104,12 +106,18 @@ public class DefaultWechatApiClient implements WechatApiClient {
     public GetPhoneNumberResult getPhoneNumber(String code) {
         final HttpUrl url = HttpUrl.get(GET_PHONE_NUMBER).newBuilder()
                 .addQueryParameter("access_token", accessTokenHolder.getValue().accessToken())
-                .addQueryParameter("js_code", code)
+//                .addQueryParameter("js_code", code)
                 .build();
+
+        Map<String, String> data = new HashMap<>();
+        data.put("code", code);
+
+        String jsonData = jsonSerializer.serializeToString(data);
+        final RequestBody requestBody = RequestBody.create(JSON, jsonData);
 
         final Request request = new Request.Builder()
                 .url(url)
-                .method("POST", null)
+                .method("POST", requestBody)
                 .build();
 
         logger.debug("Request getPhoneNumber: {}", request);
