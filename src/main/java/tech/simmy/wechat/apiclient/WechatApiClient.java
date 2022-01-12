@@ -2,7 +2,7 @@ package tech.simmy.wechat.apiclient;
 
 public interface WechatApiClient {
 
-    GetAccessTokenResult getAccessToken();
+    AccessToken getAccessToken();
 
     CodeToSessionResult codeToSession(String code);
 

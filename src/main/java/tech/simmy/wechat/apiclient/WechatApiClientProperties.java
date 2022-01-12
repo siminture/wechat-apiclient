@@ -6,6 +6,4 @@ public interface WechatApiClientProperties {
 
     String getSecret();
 
-    String getBaseUrl();
-
 }
